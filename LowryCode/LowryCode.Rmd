@@ -1,0 +1,75 @@
+---
+title: "Lowry Code"
+author: "Ziyue Yang"
+date: '2022-02-22'
+output: html_document
+--- 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+library(dplyr)
+```
+
+## How to run
+ - Put in your sample absorbances and the standard curve equation
+ - Click on `Knit` on the top of the window
+ - Let Ella know if crazy things happened
+
+## User Input
+
+**Enter your sample absorbances below, in an order of (10 uL, 10 uL, 20 uL)**
+```{r}
+#Enter your sample absorbances here, organized in (10 uL, 10 uL, 20 uL):
+sample_absorbances <- c(10, 10, 20, 10, 10, 20, 10, 10, 20, 10, 10, 20, 10, 10, 20, 10, 10, 20)
+```
+
+**Enter your standard curve from Kleidagraph here:**
+
+*Format: amount <- (absorbance - y-intercept) / slope*
+```{r}
+amount_function <- function(absorbance) {
+  amount <- (absorbance - 0.015735)/0.003844 #Enter your standard curve from Kleidagraph here
+  return(amount)
+}
+```
+
+## Calculations
+```{r}
+#This calculates the amount of protein (in mg) in each sample
+amount_of_protein <- amount_function(sample_absorbances)
+```
+
+```{r}
+#This calculates the concentrations of protein (in mg/mL) in each sample
+concentration_function <- function(amount) {
+  volumes = c(10, 10, 20) #Change it if you used different amount of samples
+  conc <- amount/volumes
+  return(conc)
+}
+
+sample_concentrations <- concentration_function(amount_of_protein)
+```
+
+```{r}
+conc_table <- matrix(data = sample_concentrations, nrow = 6, byrow = TRUE)
+conc_table <- cbind(conc_table, avg = c(rowMeans(conc_table))) %>% as.data.frame()
+```
+
+## View and export
+
+```{r}
+conc_table
+```
+
+```{r}
+#Do the following if you want to export the data:
+#Check if the working directory folder is the one you want
+getwd()
+
+# Export the data
+write.csv(conc_table, file = "your path \\ your file name.csv")
+```
+
