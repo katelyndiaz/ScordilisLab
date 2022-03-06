@@ -19,6 +19,7 @@ x <- c(5,
        120, 
        120)
 
+# Enter the BSA absorbances here
 y <- c(0.0325, 
        0.0237, 
        0.0580, 
