@@ -1,7 +1,7 @@
 library(dplyr)
 
 # How to run:
-# Enter your sample absorbances and the standard curve in the indicated area 
+# Enter your sample/BSA absorbances in the indicated area 
 # Ctl-A --> Run
 
 
@@ -68,6 +68,8 @@ sample_absorbances = c(0.0435,
                        0.0355, 
                        0.0710)
 
+sample_count = length(sample_absorbances)/3
+
 
 # This calculates the concentrations of protein (in mg/mL) in each sample
 concentration_function <- function(absorbance) {
@@ -82,7 +84,7 @@ sample_concentrations <- concentration_function(sample_absorbances)
 
 # This constructs a viewer-friendly table
 conc_table <- matrix(data = sample_concentrations, 
-                     nrow = 5, # Change this if you have n samples
+                     nrow = sample_count, # Change this if you have n samples
                      byrow = TRUE)
 
 conc_table <- cbind(conc_table, 
