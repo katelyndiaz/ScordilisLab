@@ -69,13 +69,11 @@ sample_absorbances = c(0.0435,
                        0.0355, 
                        0.0710)
 
-sample_count = length(sample_absorbances)/3
-
+volumes <- c(5, 5, 10) # Change this if you loaded a different amount of samples or not doing a triplicate
 
 # This calculates the concentrations of protein (in mg/mL) in each sample
 concentration_function <- function(absorbance) {
   amount <- (absorbance - intercept) / slope
-  volumes =c(5, 5, 10) # Change this if you loaded a different amount of samples
   conc <- amount/volumes
   return(conc)
 }
@@ -85,12 +83,14 @@ sample_concentrations <- concentration_function(sample_absorbances)
 
 # This constructs a viewer-friendly table
 conc_table <- matrix(data = sample_concentrations, 
-                     nrow = sample_count, # Change this if you have n samples
+                     nrow = length(sample_absorbances)/length(volumes),
                      byrow = TRUE)
 
 conc_table <- cbind(conc_table, 
                     avg = c(rowMeans(conc_table, 
                                      na.rm = TRUE))) %>% as.data.frame()
+
+colnames(conc_table) <- c(paste(volumes, "ug", sep = ' '), "average")
 
 View(conc_table)
 
